@@ -11,7 +11,7 @@ import java.time.Instant;
 @Getter
 @AllArgsConstructor
 public class Event {
-    @Id @NonNull private EventId id;
+    private final EventId id;
     private String title;
     private String description;
     private Instant dateTime;
@@ -21,7 +21,23 @@ public class Event {
     private String imageUrl;
     private EventStatus status;
 
-    // Business Methods (Domain Logic)
+    /**
+     * Business domain operations for mutations (Updates, Publishing, Cancelling)
+     */
+    public void updateDetails(String title, String description, Instant dateTime,
+                              String location, String category, String tagClass, String imageUrl) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Title cannot be updated to empty");
+        }
+        this.title = title;
+        this.description = description;
+        this.dateTime = dateTime;
+        this.location = location;
+        this.category = category;
+        this.tagClass = tagClass;
+        this.imageUrl = imageUrl;
+    }
+
     public void publish() {
         if (this.status == EventStatus.CANCELLED) {
             throw new IllegalStateException("Cannot publish a cancelled event");

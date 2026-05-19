@@ -12,7 +12,6 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class EventRepositoryImpl implements EventRepository {
-
     private final SpringDataMongoEventRepository springDataRepository;
 
     @Override
@@ -43,7 +42,12 @@ public class EventRepositoryImpl implements EventRepository {
                         doc.getCategory(),
                         doc.getTagClass(),
                         doc.getImageUrl(),
-                        EventStatus.valueOf(doc.getStatus()) // The missing 9th argument!
+                        EventStatus.valueOf(doc.getStatus())
                 ));
+    }
+
+    @Override
+    public void delete(EventId id) {
+        springDataRepository.deleteById(id.value());
     }
 }

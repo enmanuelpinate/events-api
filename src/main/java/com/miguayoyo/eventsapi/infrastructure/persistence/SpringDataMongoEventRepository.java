@@ -7,5 +7,4 @@ import java.util.List;
 
 @Repository
 public interface SpringDataMongoEventRepository extends MongoRepository<DocumentEvent, String> {
-    List<DocumentEvent> findByStatus(String status);
 }

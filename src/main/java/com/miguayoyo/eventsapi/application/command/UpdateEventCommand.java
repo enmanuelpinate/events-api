@@ -1,10 +1,9 @@
 package com.miguayoyo.eventsapi.application.command;
 
-import com.miguayoyo.eventsapi.domain.model.EventStatus;
-
 import java.time.Instant;
 
-public record CreateEventCommand(
+public record UpdateEventCommand(
+        String id,
         String title,
         String description,
         Instant dateTime,

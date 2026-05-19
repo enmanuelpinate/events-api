@@ -2,7 +2,7 @@ package com.miguayoyo.eventsapi.application.query.dto;
 
 import java.time.Instant;
 
-public record PublicEventSummaryDto(
+public record EventDto(
         String id,
         String title,
         String description,
@@ -10,5 +10,6 @@ public record PublicEventSummaryDto(
         String location,
         String category,
         String tagClass,
-        String imageUrl
+        String imageUrl,
+        String status
 ) {}

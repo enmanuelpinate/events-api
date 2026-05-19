@@ -34,32 +34,49 @@ class CreateEventCommandHandlerTest {
 
     @Test
     void should_CreateAndPublishEvent_When_CommandIsValid() {
-        // Arrange (Given)
-        Instant futureDate = Instant.now().plus(5, ChronoUnit.DAYS);
+        // Arrange
+        Instant futureDate = Instant.now().plus(10, ChronoUnit.DAYS);
         CreateEventCommand command = new CreateEventCommand(
-                "Gran Marcha del Orgullo",
-                "Celebración anual en Caracas",
+                "Gran Marcha LGBT+",
+                "Marcha anual del orgullo",
                 futureDate,
-                "Plaza Venezuela",
+                "Caracas",
                 "Marcha",
-                "tag-marcha",
-                "https://storage.com/marcha.jpg",
-                EventStatus.PUBLISHED
+                "tag-pride",
+                "https://storage.com/marcha.jpg"
         );
 
-        // Act (When)
+        // Act
         String generatedId = commandHandler.handle(command);
 
-        // Assert (Then)
-        assertNotNull(generatedId, "The handler should return a valid generated Event ID");
+        // Assert
+        assertNotNull(generatedId);
 
-        // Verify that the repository's save method was called exactly once, and capture the object sent to it
         ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
         verify(eventRepository).save(eventCaptor.capture());
 
         Event savedEvent = eventCaptor.getValue();
         assertEquals(generatedId, savedEvent.getId().value());
-        assertEquals("Gran Marcha del Orgullo", savedEvent.getTitle());
-        assertEquals(EventStatus.PUBLISHED, savedEvent.getStatus(), "New events processed by handler should be PUBLISHED");
+        assertEquals("Gran Marcha LGBT+", savedEvent.getTitle());
+        assertEquals(EventStatus.PUBLISHED, savedEvent.getStatus());
+    }
+
+    @Test
+    void should_ThrowException_When_EventDateIsInThePast() {
+        // Arrange
+        Instant pastDate = Instant.now().minus(2, ChronoUnit.DAYS);
+        CreateEventCommand command = new CreateEventCommand(
+                "Evento Invalido",
+                "Pasado",
+                pastDate,
+                "Caracas",
+                "Cultural",
+                "tag-fail",
+                "https://storage.com/fail.jpg"
+        );
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> commandHandler.handle(command));
+        verifyNoInteractions(eventRepository);
     }
 }
